@@ -228,3 +228,4 @@ C:\Users\Pedro\Desktop\jwtC#\jwt\obj\Debug\net8.0\refint\jwt.dll
 C:\Users\Pedro\Desktop\jwtC#\jwt\obj\Debug\net8.0\jwt.pdb
 C:\Users\Pedro\Desktop\jwtC#\jwt\obj\Debug\net8.0\jwt.genruntimeconfig.cache
 C:\Users\Pedro\Desktop\jwtC#\jwt\obj\Debug\net8.0\ref\jwt.dll
+C:\Users\Pedro\Desktop\jwtC#\jwt\obj\Debug\net8.0\jwt.sourcelink.json

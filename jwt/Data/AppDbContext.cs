@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using jwt.Data.Entities;
 using jwt.Data.Configurations;
+using jwt.Models;
 
 namespace jwt.Data
 {
@@ -11,16 +12,18 @@ namespace jwt.Data
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Produto> Produtos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Aplicando as configurações das entidades que criamos
+            base.OnModelCreating(modelBuilder); // Chamada para o método da classe base é importante.
+
+            // Aplica a configuração do usuário.
             modelBuilder.ApplyConfiguration(new UserConfiguration());
 
-            // Você pode adicionar outras configurações de entidades aqui no futuro
-            // modelBuilder.ApplyConfiguration(new OutraEntidadeConfiguration());
-
-            base.OnModelCreating(modelBuilder);
+            // Aplica a configuração do produto.
+            modelBuilder.ApplyConfiguration(new ProdutoConfiguration());
         }
     }
 }
+    

@@ -11,6 +11,13 @@ using jwt.Middlewares;
 using FluentValidation.AspNetCore;
 using jwt.Validations.FluentValidation;
 using FluentValidation;
+using jwt.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Logging;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +47,7 @@ builder.Services.AddScoped<JwtHelper>();
 // Configurando a autenticação JWT
 var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>(); // CORREÇÃO AQUI
 
+
 var key = Encoding.ASCII.GetBytes(jwtSettings!.SecretKey!);
 
 builder.Services.AddAuthentication(options =>
@@ -63,6 +71,9 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+// Adicionando o serviço de produtos
+builder.Services.AddScoped<IProdutoService, ProdutoService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -82,5 +93,23 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Cria o banco de dados se ele não existir e aplica as migrações
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<AppDbContext>();
+        context.Database.Migrate(); // Aplica as migrações pendentes
+        // Se você tiver algum dado inicial para popular o banco, pode fazer aqui
+        // Exemplo: SeedData.Initialize(context);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Ocorreu um erro ao criar/migrar o banco de dados.");
+    }
+}
 
 app.Run();
